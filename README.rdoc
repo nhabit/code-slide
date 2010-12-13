@@ -1,0 +1,21 @@
+= git-train
+
+ This requires that the git branches are names consequtively: 1_tag, 2_tag, 3_tag, etc. 
+ anything that doesn't start with a number (like master) won't be part of the course.
+ check the tests for how to use.
+
+== Contributing to git-train
+ 
+* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
+* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
+* Fork the project
+* Start a feature/bugfix branch
+* Commit and push until you are happy with your contribution
+* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+
+== Copyright
+
+Copyright (c) 2010 Andy Mendelsohn. See LICENSE.txt for
+further details.
+
