@@ -45,10 +45,15 @@ class CodeSlide
     end                       
   end
 
-# how to make the following not reek (according to reek)
-# is it too obfuscated? am I showing my perl roots?
+# is this too obfuscated? am I showing my perl-love?
 # the fact that i've always admired the grace of the schwartzian transform  
-#
+# But, having said that, this does what i want, but i'm not sure why.
+# We sort on element 1 of our collected array, and then do the sort again on the same elemt.
+# This makes the following sort correctly 1_ddd, 1_1_sss, 1_2_dssa, 2_sss, 2_1_sss         
+# when i did it using two elements: 
+# [ branch, (branch.match(/^(\d+)_(\d*)_*/) ? $1.to_i : 0), $2.to_i ]
+# it just wouldn't work. Odd! and yet this still needs some explanation.
+ 
   def sorted_branch_list
     sorted_steps = steps.collect{| branch | 
       [ branch, (branch.match(/^(\d+)_/) ? $1.to_i : 0) ] 
