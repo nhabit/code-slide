@@ -190,7 +190,7 @@ describe CodeSlide do
           :new=>[]}
       end  
     end
-        
+          
     describe "changes" do                
       it "should print \"no changes\" if we're on the first step" do
         @code_slider.checkout("1_first_branch")
@@ -214,14 +214,12 @@ describe CodeSlide do
     describe "client_run" do             
       context "with 'start'" do          
         it "should set the current_step to 0" do
-          @code_slider.should_receive(:puts).twice
           @code_slider.client_run('start')
           @code_slider.current_step.should == 0
         end
       
         it "should call 'start'" do 
           @code_slider.should_receive(:response_from_command).with(:start)
-          @code_slider.should_receive(:puts)
           @code_slider.client_run('start')
         end
         
@@ -236,7 +234,6 @@ describe CodeSlide do
       context "with 'current_branch'" do 
         it "should call 'current_branch'" do 
           @code_slider.should_receive(:response_from_command).with(:current_branch)
-          @code_slider.should_receive(:puts)
           @code_slider.client_run('current_branch')
         end
 
@@ -251,7 +248,6 @@ describe CodeSlide do
       context "with 'last'" do           
         it "should call the 'last' method" do
           @code_slider.should_receive(:last)
-          @code_slider.should_receive(:puts)
           @code_slider.client_run('last')
         end
 
@@ -264,7 +260,6 @@ describe CodeSlide do
       context "with 'next'" do           
         it "should call the 'next' method" do
           @code_slider.should_receive(:next)
-          @code_slider.should_receive(:puts)
           @code_slider.client_run('next')
         end
 
@@ -278,7 +273,6 @@ describe CodeSlide do
       context "with 'prev'" do           
         it "should call the 'prev' method" do
           @code_slider.should_receive(:prev)
-          @code_slider.should_receive(:puts)
           @code_slider.client_run('prev')
         end
 
@@ -294,7 +288,6 @@ describe CodeSlide do
         it "should call the 'first' method" do  
           @code_slider.last                  
           @code_slider.should_receive(:first) 
-          @code_slider.should_receive(:puts)
           @code_slider.client_run('first')
         end
 
@@ -309,12 +302,10 @@ describe CodeSlide do
       context "with 'list_steps'" do     
         it "should call the 'list_steps' method" do  
           @code_slider.should_receive(:list_steps) 
-          @code_slider.should_receive(:puts)
           @code_slider.client_run('list_steps')
         end
 
         it "should provide a list of steps" do   
-          @code_slider.should_receive(:puts)
           @code_slider.response_from_command(:list_steps)
         end                                                   
       end
@@ -322,6 +313,7 @@ describe CodeSlide do
       context "with 'help'" do           
         it "should call the 'help_text' method" do  
           @code_slider.should_receive(:help_text) 
+          @code_slider.should_receive(:puts)
           @code_slider.client_run('help')
         end
                                                                
