@@ -190,6 +190,31 @@ describe CodeSlide do
           :new=>[]}
       end  
     end
+    
+    describe "branch_changes?" do
+      
+      before(:each) do
+        repo = File.dirname(__FILE__) + '/fixtures/repository_3'
+        args_hash = {:repository => repo}                                     
+        @code_slider = CodeSlide.new(args_hash)
+        @code_slider.checkout('3_third_branch')
+      end
+    
+      it "should return false if there have been any changes to this branch that differ from the repo copy" do
+        @code_slider.branch_changes?.should == false
+      end 
+      
+      it "should return true if there have been changes to this branch that differ from the repo copy" do
+        repo_file = File.dirname(__FILE__) + '/fixtures/repository_3/file2'        
+        fl = File.open( repo_file, 'a+' ) 
+        fl.puts( "adding a new line to file2\n" )
+        fl.close()
+        @code_slider.branch_changes?.should == true
+        fl = File.open( repo_file, 'w+' ) 
+        fl.puts( "blah" )
+        fl.close()
+      end
+    end
           
     describe "changes" do                
       it "should print \"no changes\" if we're on the first step" do
