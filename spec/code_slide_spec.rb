@@ -71,9 +71,7 @@ describe CodeSlide do
     
     describe "help" do                                               
       it "should print a help description" do
-        @code_slider.should_receive(:puts).with(/Code Slide Help/ )
-        @code_slider.should_receive(:puts).at_least(9).times
-        @code_slider.help_text()
+         @code_slider.help_text().should =~ /Code Slide Help/
       end                                                            
     end   
 
@@ -191,8 +189,8 @@ describe CodeSlide do
           :deleted=>[],
           :new=>[]}
       end  
-    end                          
-    
+    end
+        
     describe "changes" do                
       it "should print \"no changes\" if we're on the first step" do
         @code_slider.checkout("1_first_branch")
@@ -216,57 +214,78 @@ describe CodeSlide do
     describe "client_run" do             
       context "with 'start'" do          
         it "should set the current_step to 0" do
+          @code_slider.should_receive(:puts).twice
           @code_slider.client_run('start')
           @code_slider.current_step.should == 0
         end
       
-        it "should print 'Course started'" do 
-          @code_slider.should_receive(:puts).with("Course started")
+        it "should call 'start'" do 
+          @code_slider.should_receive(:response_from_command).with(:start)
+          @code_slider.should_receive(:puts)
           @code_slider.client_run('start')
+        end
+        
+        context "calling response_from_command" do
+          it "should print 'Course started'" do
+            @code_slider.should_receive(:puts).with("Course started")
+            @code_slider.response_from_command(:start)
+          end
         end
       end
       
       context "with 'current_branch'" do 
-        it "should print 'Course started'" do 
-          @code_slider.should_receive(:puts).with("1_first_branch")
+        it "should call 'current_branch'" do 
+          @code_slider.should_receive(:response_from_command).with(:current_branch)
+          @code_slider.should_receive(:puts)
           @code_slider.client_run('current_branch')
+        end
+
+        context "calling response_from_command" do
+          it "should print '1_first_branch'" do
+            @code_slider.should_receive(:puts).with("1_first_branch")
+            @code_slider.response_from_command(:current_branch)
+          end
         end
       end
       
       context "with 'last'" do           
         it "should call the 'last' method" do
           @code_slider.should_receive(:last)
+          @code_slider.should_receive(:puts)
           @code_slider.client_run('last')
         end
 
         it "should inform us we've switched to '2_second_branch'" do                                             
           @code_slider.should_receive(:puts).with("Switched to branch '3_third_branch'")
-          @code_slider.client_run('last')                                      
+          @code_slider.response_from_command(:last)                                      
         end  
       end                                   
       
       context "with 'next'" do           
         it "should call the 'next' method" do
           @code_slider.should_receive(:next)
+          @code_slider.should_receive(:puts)
           @code_slider.client_run('next')
         end
 
         it "should inform us we've switched to '2_second_branch'" do                                           
           @code_slider.should_receive(:puts).with("Switched to branch '2_second_branch'")
-          @code_slider.client_run('next')
+          @code_slider.response_from_command(:next)
           @code_slider.current_branch.should == "2_second_branch"
         end                                 
-      end
+      end                                         
+      
       context "with 'prev'" do           
         it "should call the 'prev' method" do
           @code_slider.should_receive(:prev)
+          @code_slider.should_receive(:puts)
           @code_slider.client_run('prev')
         end
 
         it "should inform us we've switched to '2_second_branch'" do        
           @code_slider.last                  
           @code_slider.should_receive(:puts).with("Switched to branch '2_second_branch'")
-          @code_slider.client_run('prev')
+          @code_slider.response_from_command(:prev)
           @code_slider.current_branch.should == "2_second_branch"
         end                                 
       end                                                     
@@ -275,13 +294,14 @@ describe CodeSlide do
         it "should call the 'first' method" do  
           @code_slider.last                  
           @code_slider.should_receive(:first) 
+          @code_slider.should_receive(:puts)
           @code_slider.client_run('first')
         end
 
         it "should inform us we've switched to '1_first_branch'" do
           @code_slider.last        
           @code_slider.should_receive(:puts).with("Switched to branch '1_first_branch'")
-          @code_slider.client_run('first')
+          @code_slider.response_from_command(:first)
           @code_slider.current_branch.should == "1_first_branch"
         end                                                   
       end
@@ -289,12 +309,13 @@ describe CodeSlide do
       context "with 'list_steps'" do     
         it "should call the 'list_steps' method" do  
           @code_slider.should_receive(:list_steps) 
+          @code_slider.should_receive(:puts)
           @code_slider.client_run('list_steps')
         end
 
         it "should provide a list of steps" do   
           @code_slider.should_receive(:puts)
-          @code_slider.client_run('list_steps')
+          @code_slider.response_from_command(:list_steps)
         end                                                   
       end
 
@@ -303,23 +324,16 @@ describe CodeSlide do
           @code_slider.should_receive(:help_text) 
           @code_slider.client_run('help')
         end
-
-        it "should provide a list of steps" do   
-          @code_slider.should_receive(:puts)
-          @code_slider.client_run('list_steps')
-        end                                                    
+                                                               
       end 
       
       context "with a numeric value" do  
         it "should call step with the argument provided" do
-          @code_slider.should_receive(:step).with('2')
+          @code_slider.should_receive(:puts).with("Switched to branch '3_third_branch'")
+          @code_slider.should_receive(:step).with('2').and_return("Switched to branch '3_third_branch'")
           @code_slider.client_run('2')
         end
         
-        it "should change the current branch to the branch pointed to by the step number" do
-          @code_slider.should_receive(:puts).with("Switched to branch '3_third_branch'")  
-          @code_slider.client_run('2')                               
-        end
       end                                                      
     end                                                        
   end                                   

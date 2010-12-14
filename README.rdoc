@@ -1,7 +1,60 @@
-= git-train
+= code-slide
+                                                                                   
+ Code-slide is a tool for presenters who use live, working code as part of their presentations.
+ 
+It's essentially a thin layer over Git, and makes enormous use of git's easy branching to enable you to comparmentalise all your changes into small snap-shots. 
 
- This requires that the git branches are names consequtively: 1_tag, 2_tag, 3_tag, etc. 
- anything that doesn't start with a number (like master) won't be part of the course.
+Installation:
+git clone git@github.com:nhabit/Code-slide.git
+rake install 
+
+How to:
+Setting it up
+
+1) mkdir my_project
+2) cd my_project
+3) git init .
+4) touch README
+5) git add README
+6) git commit -m "The first commit"
+
+Getting going:
+7) Add some code. the first code you want to show
+8) git add and git commit the code
+9) git checkout -b "1_my_first_slide"
+
+Repeat :
+10) Add some code. The second lot of code you want to show
+11) git add and git commit the code
+12) git checkout -b "2_this would be my second slide"
+
+And then repeat. repeat. repeat
+
+Now, at any time you can use the code-slide command, as it will be in your bin.
+Type code-slide help
+
+Run with the following:
+prev :               Checks out the previous step
+list_steps :         Lists the possible steps and their order
+next :               Checks out the next step
+start :              Start the course - sets the runner to 0 - probably not necessary
+current_branch :     Prints the current branch name
+file_mods :          Lists the files and their modifications between this step and the previous one
+changes :            Lists the files changed between this step and the previous one
+first :              Checks out the first step
+last :               Checks out the last step
+Providing just a number will change to that particular step
+
+=
+-
+
+
+ 
+ 
+ 
+ It requires that your git branches are names consecutively: 1_tag, 2_tag, 3_tag, etc. 
+ Anything that doesn't start with a number (like master) won't be included as a slide.
+ 
  check the tests for how to use.
 
 == Contributing to git-train

@@ -13,7 +13,7 @@ module CRHelper
   def make_path( dirname )
     File.join( File.dirname( __FILE__ ), 'fixtures', dirname )   
   end   
-  
+    
   def make_missing_directories
     [ 'no_repository', 'repository_1', 'repository_2', 'repository_3' ].each do | rep |
       repo_path = make_path( rep )

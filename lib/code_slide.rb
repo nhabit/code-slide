@@ -2,6 +2,11 @@ require 'rubygems'
 require 'git'
 require 'runner_constants'
 
+# CodeSlide is a class used to run and interface with git
+# It's primary use is to facilitate relatively seamless presentations
+# of code to training courses or talks
+#                                     
+
 class CodeSlide
   # call_hash defined in the constants.
   include CodeSlide::RunnerConstants
@@ -18,7 +23,7 @@ class CodeSlide
   end
 
   def steps                                
-    @git.branches.map{| brnch | brnch.name }
+    @git.branches.map{| branch | branch.name }
   end
   
   def start
@@ -33,26 +38,25 @@ class CodeSlide
   def previous_branch                 
     current = current_branch
     branches = sorted_branch_list
-    wanted = nil
     branches.each_with_index do | step, ind |
-      if step == current_branch
-        wanted = ind-1
-        break
+      if step == current
+        return branches[ind-1]
       end
-    end
-    branches[wanted]
+    end                       
   end
-  
+
+# how to make the following not reek (according to reek)
+# is it too obfuscated? am I showing my perl roots?
+# the fact that i've always admired the grace of the schwartzian transform  
+#
   def sorted_branch_list
- 
-    steps.delete('master') 
-    sorted_steps = steps.collect{| brn | 
-      [ brn, (brn.match(/^(\d+)_/) ? $1.to_i : 0) , (brn.match(/^\d+_(\d+)_/) ? $1.to_i : 0)] 
-    }.sort_by{|a| a[1] }.sort_by{|b| b[1]}.collect{|stp| stp[0]}
+    sorted_steps = steps.collect{| branch | 
+      [ branch, (branch.match(/^(\d+)_/) ? $1.to_i : 0) ] 
+    }.sort_by{| branch_array | branch_array[1] }.sort_by{|branch_array_again| branch_array_again[1]}.collect{|step| step[0]}
     sorted_steps.delete('master')
     sorted_steps
   end                
-  
+      
   def checkout(branch)
     @git.checkout(branch)
   end 
@@ -98,105 +102,115 @@ class CodeSlide
   end
      
   def list_steps
-    list_string = ""
-    current = current_branch
-    sorted_branch_list.each_with_index do | step, ind |
-      if step == current_branch
-        step << " [Current Step]"
-      end
-      step.gsub!(/_/," ")  
-			step.sub!(/^\d+ /,"")
-      
-      list_string << "#{ind}) #{step}\n"
+    list_string = ""                                       
+    sorted_branch_list.each_with_index do | step, ind |    
+      list_string << "#{ind}) #{step_string(step)}\n"
     end                        
-    # puts list_string
     list_string
   end
-                           
+
+  def step_string(step)
+    step << " [Current Step]" if step == current_branch
+    step.gsub!(/_/," ")  
+    step.sub!(/^\d+ /,"")    
+  end                      
+  
   def changed_files
     set_current_step
     return false if @current_step == 0
+    build_changed_file_hash
+    @change_file_hash
+  end
+
+  def build_changed_file_hash
+    @change_file_hash = { :new => [ ], :deleted => [ ], :modified => [ ] }
     previous_step = previous_branch
     this_step = current_branch
-    new_files = []
-    deleted_files = []
-    modified_files = []
-    git_diff = @git.diff(previous_step, this_step)
-    git_diff.each do |file|
-      if file.type == "new"
-        new_files << [file.path ]
-      elsif file.type == "modified"
-        modified_files << [ file.path, "\t\t" + file.patch ]
-      elsif file.type == "deleted"
-        deleted_files << [ file.path ]
-      end
-    end
-    {:new => new_files, :deleted => deleted_files, :modified => modified_files}
+    @git.diff(previous_step, this_step).each do | file |
+      add_changes_from_diff( file )
+    end             
   end
-
+  
+  def add_changes_from_diff( file )
+    path = file.path
+    case file.type
+    when /new/
+      @change_file_hash[ :new ]  << [ path ]
+    when /modified/
+      @change_file_hash[ :modified ] << [ path, "\t\t" + file.patch ]
+    when /deleted/
+      @change_file_hash[ :deleted ] << [ path ]
+    end                          
+  end           
+  
   def changes
-    changes_string = ""
+    @changes_string = ""
     change_list = changed_files
     return "no changes" if change_list == false
-    [:new,:deleted,:modified].each do | type |
-      changes_string << "\n" + type.to_s.capitalize + " files\n"
-      changes_string << "-------\n"
-      if change_list[type].size == 0 
-        changes_string << "None\n"
-      else
-        change_list[type].each{ |file| changes_string << file[0] + "\n" }
-      end
+    [ :new, :deleted, :modified ].each do | type |
+      process_change_type( type )
     end
-    # puts changes_string
-    changes_string
+    @changes_string
   end          
-
-  def file_mods
-    changes_string = ""
-    change_list = changed_files
-    return "no mods" if change_list[:modified].size == 0
-    change_list[:modified].each{ |file| changes_string << file[0] + "\n" + file[1] }
-    changes_string 
+ 
+  def process_change_type( type )
+    type_array = @change_file_hash[type]
+    @changes_string << "\n" + type.to_s.capitalize + " files\n"
+    @changes_string << "-------\n"                             
+    return  @changes_string << "None\n" if type_array.size == 0
+    type_array.each{ |file| @changes_string << file[0] + "\n" } 
+  end    
+ 
+  def file_mods                             
+    return "no_mods" if modifications?
+    return_string = @changed_file_hash[:modified].inject(""){ |changes_string, modified_file|  changes_string << modified_file[0] + "\n" + modified_file[1] }
   end
 
+  def modifications?
+    return false if @changed_file_hash[:modified].nil?
+    true
+  end
+                  
   def help_text
-      puts "Code Slide Help"
-      puts "------------------"
-      puts "Run with the following commands:\n"
-      CALL_HASH.keys.each do | com |
-        hsh = CALL_HASH[com]
-        puts "%-20s %s" % [ com.to_s + " :", hsh[:help] ]
-      end
-      puts "------------------"
-      puts "Providing just a number will change to that particular step\n\n"
+    @help_string = <<e_string
+Code Slide Help
+------------------
+Run with the following:
+e_string
+    CALL_HASH.keys.each do | com |
+      hsh = CALL_HASH[com]
+      @help_string << "%-20s %s" % [ com.to_s + " :", hsh[:help] ] + "\n"
+    end
+    @help_string << "Providing just a number will change to that particular step\n\n"
   end
   
   def client_run(command)
     
-    case command 
-      
+    case command           
     when /^(help|h)$/
-      help_text
+      puts help_text
     when /\d+/ 
       response = send(:step, command)
       puts response if !response.nil?
-    else 
-      if respond_hash = CALL_HASH[command.to_sym]
-        response = send(command.to_sym)
-        if response_string = respond_hash[:respond_with]
-          puts response_string
-        else
-          puts response if !response.nil?
-        end
-      else
-        puts "sorry I do not understand '#{command}'"
-      end
-    end  
-    
+    else
+      command_sym = command.to_sym
+      puts response_from_command( command_sym )
+    end      
+  end
+  
+  def response_from_command( command )
+    puts "sorry I do not understand #{command}" if !CALL_HASH.has_key?(command)
+    respond_hash = CALL_HASH[command]
+    response = send(command)
+    if response_string = respond_hash[:respond_with]
+      puts response_string
+    else
+      puts response if !response.nil?
+    end
   end
   
 end
-
+#just a missing repository error - nothing to see here - move on
 class MissingRepositoryError < ArgumentError
 end
 

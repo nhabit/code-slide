@@ -1,4 +1,5 @@
-class CodeSlide
+# constants for use in codeslide - saves on the clutter and facilitates look up and dynamic despatch
+class CodeSlide                                                                                     
   module RunnerConstants
     CALL_HASH = { 
       :start => { :respond_with => 'Course started', :help => "Start the course - sets the runner to 0 - probably not necessary" },
