@@ -4,29 +4,29 @@
  
 It's essentially a thin layer over Git, and makes enormous use of git's easy branching to enable you to comparmentalise all your changes into small snap-shots. 
 
-Installation:
+== Installation:
 git clone git@github.com:nhabit/Code-slide.git
 rake install 
 
-How to:
-Setting it up
+== How to:
+=== Setting it up
 
-1) mkdir my_project
-2) cd my_project
-3) git init .
-4) touch README
-5) git add README
-6) git commit -m "The first commit"
+1. mkdir my_project
+2. cd my_project
+3. git init .
+4. touch README
+5. git add README
+6. git commit -m "The first commit"
 
-Getting going:
-7) Add some code. the first code you want to show
-8) git add and git commit the code
-9) git checkout -b "1_my_first_slide"
+=== Getting going:
+7. Add some code. the first code you want to show
+8. git add and git commit the code
+9. git checkout -b "1_my_first_slide"
 
-Repeat :
-10) Add some code. The second lot of code you want to show
-11) git add and git commit the code
-12) git checkout -b "2_this would be my second slide"
+=== Repeat :
+10. Add some code. The second lot of code you want to show
+11. git add and git commit the code
+12. git checkout -b "2_this would be my second slide"
 
 And then repeat. repeat. repeat
 
@@ -34,15 +34,15 @@ Now, at any time you can use the code-slide command, as it will be in your bin.
 Type code-slide help
 
 Run with the following:
-prev :               Checks out the previous step
-list_steps :         Lists the possible steps and their order
-next :               Checks out the next step
-start :              Start the course - sets the runner to 0 - probably not necessary
-current_branch :     Prints the current branch name
-file_mods :          Lists the files and their modifications between this step and the previous one
-changes :            Lists the files changed between this step and the previous one
-first :              Checks out the first step
-last :               Checks out the last step
+* prev :               Checks out the previous step
+* list_steps :         Lists the possible steps and their order
+* next :               Checks out the next step
+* start :              Start the course - sets the runner to 0 - probably not necessary
+* current_branch :     Prints the current branch name
+* file_mods :          Lists the files and their modifications between this step and the previous one
+* changes :            Lists the files changed between this step and the previous one
+* first :              Checks out the first step
+* last :               Checks out the last step
 Providing just a number will change to that particular step
 
 =
