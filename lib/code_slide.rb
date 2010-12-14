@@ -140,6 +140,10 @@ class CodeSlide
     return true if @git.diff(current_branch, '.').size > 0
     return false
   end
+
+  def stash
+    Git::Stash.new(@git,"WIP").save  
+  end
   
   def add_changes_from_diff( file )
     path = file.path

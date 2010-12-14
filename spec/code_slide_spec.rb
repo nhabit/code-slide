@@ -215,6 +215,26 @@ describe CodeSlide do
         fl.close()
       end
     end
+
+    describe "stash" do
+      
+      before(:each) do
+        repo = File.dirname(__FILE__) + '/fixtures/repository_3'
+        args_hash = {:repository => repo}                                     
+        @code_slider = CodeSlide.new(args_hash)
+        @code_slider.checkout('3_third_branch')
+      end
+      
+      it "should stash if there have been changes to this branch that differ from the repo copy, and return false to branch_changes" do
+        repo_file = File.dirname(__FILE__) + '/fixtures/repository_3/file2'        
+        fl = File.open( repo_file, 'a+' ) 
+        fl.puts( "adding a new line to file2\n" )
+        fl.close()
+        @code_slider.branch_changes?.should == true
+        @code_slider.stash
+        @code_slider.branch_changes?.should == false
+      end
+    end
           
     describe "changes" do                
       it "should print \"no changes\" if we're on the first step" do
