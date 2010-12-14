@@ -199,7 +199,7 @@ e_string
       puts response if !response.nil?
     else
       command_sym = command.to_sym
-      puts response_from_command( command_sym )
+      response_from_command( command_sym )
     end      
   end
   
