@@ -11,13 +11,13 @@ class CodeSlide
   # call_hash defined in the constants.
   include CodeSlide::RunnerConstants
   
-  attr_accessor :git, :current_step
+  attr_accessor :git, :current_step, :scm
      
   def initialize(args)
     
-    @repository = args[:repository]
+    @repository = args[ :repository ]
     raise MissingRepositoryError if !@repository    
-    
+    @scm = args[ :scm ]
     @git = Git.open( @repository )
 
   end

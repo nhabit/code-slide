@@ -1,8 +1,9 @@
 require File.dirname( __FILE__ ) + '/../lib/code_slide'
 module CRHelper
   
-  def get_runner_for( path )                                      
-     @course_runner = CodeSlide.new( { :repository => path } )                                    
+  def get_runner_for( path, scm = 'git' )                                      
+     @slide_set = CodeSlide.new( { :repository => path, :scm => scm } )                                    
+     @runner = @slide_set.slide_runner
   end
   
   def create_repositories

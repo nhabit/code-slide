@@ -1,4 +1,4 @@
-class CodeSlide
+module CodeSlide
   module Version
     MAJOR = 0
     MINOR = 5
