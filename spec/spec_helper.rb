@@ -57,6 +57,7 @@ module CRHelper
           File.open( repo_path + '/file2', 'w+' ) { | f | f.write( "adding a line to file2\n" ) }
           git.add( repo_path + '/file2')
           git.commit("adding a dummy line")
+          
         when /repository_4/  
           [ [ 'file1','1_1_branch' ], [ 'file2', '1_2_second_branch' ],
             [ 'file3', '2_third_branch' ], [ 'file4', '2_1_branch' ],

@@ -72,7 +72,7 @@ module CodeSlide
     end          
    
     def file_mods                             
-      return "no_mods" if modifications?
+      return "no_mods" if !modifications?
       return_string = @changed_file_hash[ :modified ].inject(""){ | changes_string, modified_file |  changes_string << modified_file[ 0 ] + "\n" + modified_file[ 1 ] }
     end
   

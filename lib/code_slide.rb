@@ -134,7 +134,7 @@ module CodeSlide
    
 
     def modifications?
-      return false if @changed_file_hash[ :modified ].nil?
+      return false if @change_file_hash[ :modified ].size < 1
       true
     end
                     

@@ -209,6 +209,21 @@ describe CodeSlide::WorkSpace do
       end  
     end
     
+    describe "modifications?" do
+      
+      it "should return false if there have been no modifications" do
+        @work_space.checkout( "1_first_branch" ) 
+        @work_space.build_changed_file_hash
+        @work_space.modifications?.should == false
+      end
+    
+      it "should return true if there -have- been modifications" do
+        @work_space.checkout( "3_third_branch" ) 
+        @work_space.build_changed_file_hash
+        @work_space.modifications?.should == true
+      end
+    end
+    
     describe "branch_changes?" do
       
       before( :each ) do
