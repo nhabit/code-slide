@@ -298,10 +298,7 @@ describe CodeSlide::WorkSpace do
       
         it "should call 'start'" do 
           @work_space.should_receive( :response_from_command ).with( :start )
-          old_std_out = $stdout
-          $stdout = File.new('/dev/null', 'w')
-          @work_space.client_run( 'start' )
-          $stdout = old_std_out
+          silent_call (proc{ @work_space.client_run( 'start' ) })
         end
         
         context "calling response_from_command" do
@@ -383,17 +380,12 @@ describe CodeSlide::WorkSpace do
       context "with 'list_steps'" do     
         it "should call the 'list_steps' method" do  
           @work_space.should_receive( :list_steps )
-          old_std_out = $stdout
-          $stdout = File.new('/dev/null', 'w')
-          @work_space.client_run( 'list_steps' )
-          $stdout = old_std_out
+          silent_call (proc{ @work_space.client_run( 'list_steps' ) })
         end
 
         it "should provide a list of steps" do   
           old_std_out = $stdout
-          $stdout = File.new('/dev/null', 'w')
-          @work_space.response_from_command( :list_steps )
-          $stdout = old_std_out
+          silent_call (proc{ @work_space.response_from_command( :list_steps )  })
         end                                                   
       end
 

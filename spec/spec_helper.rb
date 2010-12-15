@@ -11,6 +11,13 @@ module CRHelper
     make_missing_repositories
   end
 
+  def silent_call( code_chunk )
+    $stdout = File.new('/dev/null', 'w')
+    old_std_out = $stdout
+    code_chunk.call 
+    $stdout = old_std_out
+  end
+  
   def make_path( dirname )
     File.join( File.dirname( __FILE__ ), 'fixtures', dirname )   
   end   
