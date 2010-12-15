@@ -2,8 +2,25 @@
                                                                                    
  Code-slide is a tool for presenters who use live, working code as part of their presentations.
  
-It's essentially a thin layer over Git, and makes enormous use of git's easy branching to enable you to comparmentalise all your changes into small snap-shots. 
+It's essentially a thin layer over Git, and makes enormous use of git's easy branching to enable you to comparmentalise all your changes into small snap-shots.   
+Another feature is the instant 'stashing' of any changes you might make to a branch while demoing. Right now these stashes are only re-accessed via git's git-stash commands (git stash apply, et al). But we don't lose them and we also keep some state and no longer have to step into git to commit or revert/rebase
+ 
+The new Implementation has removed the dependency upon git, and replaced it with a more generic interface although any 
+plugin/replacement scm has to be able to provide something similiar to git's branching, stashing etc.
 
+It's still very beta, so please go easy on us!
+                               
+= Future features:
+- An attempt to move away from powerpoint and back towards the browser as a means of 'presenting' slides. with the use of html to document code changes, act as slides for a specific branch. perhaps use some very lightweight framework (ramaze? sinatra?) to produce slides/views    
+
+- Add a means of restoring stashs when you return to a particular branch.
+
+- Perhaps Add some interactivity ala sensei?
+
+
+Andy Mendelsohn - December 2010                                                                                                             
+                                                                                                             
+                                                                                                             
 == Installation:
 git clone git@github.com:nhabit/Code-slide.git
 rake install 
@@ -19,14 +36,14 @@ rake install
 6. git commit -m "The first commit"
 
 === Getting going:
-7. Add some code. the first code you want to show
-8. git add and git commit the code
-9. git checkout -b "1_my_first_slide"
+7. git checkout -b "1_my_first_slide"
+8. Add some code. the first code you want to show
+9. git add and git commit the code
 
 === Repeat :
-10. Add some code. The second lot of code you want to show
-11. git add and git commit the code
-12. git checkout -b "2_this would be my second slide"
+10. git checkout -b "2_this would be my second slide"
+11. Add some code. The second lot of code you want to show
+12. git add and git commit the code
 
 And then repeat. repeat. repeat
 
