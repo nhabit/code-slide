@@ -2,7 +2,7 @@
 #  code_slider_spec
 #
 #  Created by Andy Mendelsohn on 2010-11-28.
-#  Copyright (c) 2010 __MyCompanyName__. All rights reserved.
+#  Copyright (c) 2010 nHabit Ltd. All rights reserved.
 #
 
 require File.dirname( __FILE__ ) + '/spec_helper'
