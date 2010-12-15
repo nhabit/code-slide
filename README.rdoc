@@ -15,7 +15,9 @@ It's still very beta, so please go easy on us!
 
 - Add a means of restoring stashs when you return to a particular branch.
 
-- Perhaps Add some interactivity ala sensei?
+- Perhaps Add some interactivity ala sensei?  
+
+- Add the ability to add -slides- via code-slide, thus bypassing the git process? new_slide would always make sure you were in the last branch (to be able to maintain incremental progression)
 
 
 Andy Mendelsohn - December 2010                                                                                                             
