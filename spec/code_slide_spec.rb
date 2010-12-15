@@ -21,33 +21,51 @@ describe CodeSlide do
   
     it "should require a repository key value pair and raise an error if there isn't one" do
       args_hash = {}
-      lambda{ @code_slider = CodeSlide.new(args_hash)}.should raise_error(MissingRepositoryError)
+      lambda{ @code_slider = CodeSlide::WorkSpace.new(args_hash)}.should raise_error(CodeSlide::MissingRepositoryError)
     end
     
     it "should fail if the repository doesn't exist" do
       repo = File.dirname(__FILE__) + '/fixtures/no_repository'
       args_hash = {:repository => repo}           
-      lambda  { @code_slider = CodeSlide.new(args_hash)}.should raise_error
+      lambda  { @code_slider = CodeSlide::WorkSpace.new(args_hash)}.should raise_error
     end                                                             
     
     it "should create a new code_slider object, given a correct repository" do
       repo = File.dirname(__FILE__) + '/fixtures/repository_1'
       args_hash = {:repository => repo}
-      lambda  { @code_slider = CodeSlide.new(args_hash)}.should_not raise_error
+      lambda  { @code_slider = CodeSlide::WorkSpace.new(args_hash)}.should_not raise_error
     end
 
     it "should store the git instance in an instance variable" do
       repo = File.dirname(__FILE__) + '/fixtures/repository_1'
       args_hash = {:repository => repo}                                     
-      @code_slider = CodeSlide.new(args_hash)
+      @code_slider = CodeSlide::WorkSpace.new(args_hash)
       @code_slider.git.class.should == Git::Base
     end
   end
+
+  describe "slide_runner" do
     
+    before(:each) do 
+      repo = File.dirname(__FILE__) + '/fixtures/repository_2'
+      @code_slider = CodeSlide::WorkSpace.new({:repository => repo})
+    end
+    
+    context "in default mode" do
+      
+      it "should return an instance of the git scm interface" do
+        @code_slider.slide_runner.class.should == CodeSlide::CSGit
+      end
+    
+    end
+  end
+  
+      
   describe "steps" do                   
     before(:each) do 
       repo = File.dirname(__FILE__) + '/fixtures/repository_2'
-      @code_slider = get_runner_for(repo)                                     
+      args_hash = {:repository => repo}                                     
+      @code_slider = CodeSlide::WorkSpace.new(args_hash)
     end  
     
     it "should return a list of all the branches in the repository" do
@@ -59,7 +77,7 @@ describe CodeSlide do
     before(:each) do
       repo = File.dirname(__FILE__) + '/fixtures/repository_3'
       args_hash = {:repository => repo}                                     
-      @code_slider = CodeSlide.new(args_hash)
+      @code_slider = CodeSlide::WorkSpace.new(args_hash)
       @code_slider.start
     end
     
@@ -83,7 +101,7 @@ describe CodeSlide do
       it "should also be able to return a numerically sorted mixed list with point branches (1_1, 1_2, etc)" do
         repo = File.dirname(__FILE__) + '/fixtures/repository_4'
         args_hash = {:repository => repo}                                     
-        @code_slider = CodeSlide.new(args_hash)
+        @code_slider = CodeSlide::WorkSpace.new(args_hash)
         @code_slider.start
         @code_slider.sorted_branch_list.should == ["1_1_branch", "1_2_second_branch", "2_third_branch", "2_1_branch", "3_fifth_branch"]
       end                                                                                                             
@@ -196,7 +214,7 @@ describe CodeSlide do
       before(:each) do
         repo = File.dirname(__FILE__) + '/fixtures/repository_3'
         args_hash = {:repository => repo}                                     
-        @code_slider = CodeSlide.new(args_hash)
+        @code_slider = CodeSlide::WorkSpace.new(args_hash)
         @code_slider.checkout('3_third_branch')
       end
     
@@ -221,7 +239,7 @@ describe CodeSlide do
       before(:each) do
         repo = File.dirname(__FILE__) + '/fixtures/repository_3'
         args_hash = {:repository => repo}                                     
-        @code_slider = CodeSlide.new(args_hash)
+        @code_slider = CodeSlide::WorkSpace.new(args_hash)
         @code_slider.checkout('3_third_branch')
       end
       
