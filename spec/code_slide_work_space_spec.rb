@@ -40,7 +40,7 @@ describe CodeSlide::WorkSpace do
       repo = File.dirname(__FILE__) + '/fixtures/repository_1'
       args_hash = {:repository => repo}                                     
       @work_space = CodeSlide::WorkSpace.new(args_hash)
-      @work_space.git.class.should == Git::Base
+      @work_space.slide_runner.class.should == CodeSlide::CSGit
     end
   end
 
@@ -141,7 +141,7 @@ describe CodeSlide::WorkSpace do
     
     describe "set_current_step" do       
       it "should set the current_step instance variable to the index of current branch in the sorted_branch_list" do
-        @work_space.git.checkout("1_first_branch")
+        @work_space.checkout("1_first_branch")
         @work_space.set_current_step
         @work_space.current_step.should == 0
       end

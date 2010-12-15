@@ -1,46 +1,34 @@
 require 'rubygems'
 require 'git'
-require 'runner_constants'
+require 'code_slide/runner_constants'
 
 # CodeSlide is a class used to run and interface with git
 # It's primary use is to facilitate relatively seamless presentations
 # of code to training courses or talks
 #                                     
 require 'code_slide/scm'
-require 'code_slide/runner_api'
+require 'code_slide/ui_api'
 
 module CodeSlide
   # call_hash defined in the constants.
   class WorkSpace
+
     include CodeSlide::RunnerConstants
-    include CodeSlide::RunnerAPI
-    attr_accessor :git, :current_step, :scm
+    include CodeSlide::UIAPI
+
+    attr_accessor :git, :current_step, :scm, :slide_runner
        
     def initialize(args)
       
       @repository = args[ :repository ]
       raise MissingRepositoryError if !@repository    
       @scm = args[ :scm ] || 'git'
-      @git = Git.open( @repository )
-  
+      # for now:
+      get_runner
     end
     
-    def slide_runner   
-      debugger
+    def get_runner   
       @slide_runner = SCM_HASH[@scm.to_sym].call(@repository)
-    end
-  
-    def steps                                
-      @git.branches.map{| branch | branch.name }
-    end
-    
-    def start
-      @current_step = 0
-      checkout_current_step
-    end
-    
-    def current_branch                 
-      @git.current_branch
     end
     
     def previous_branch                 
@@ -71,23 +59,8 @@ module CodeSlide
     end                
         
     def checkout(branch)
-      @git.checkout(branch)
-    end 
-    
-    def next
-      set_current_step                                              
-      if @current_step < sorted_branch_list.size
-        @current_step += 1 
-        checkout_current_step      
-      end
-    end
-    
-    def prev
-      set_current_step
-      if @current_step > 0
-        @current_step -= 1
-        checkout_current_step      
-      end
+      stash if branch_changes?
+      @slide_runner.checkout(branch)
     end 
     
     def step(step_number)
@@ -95,31 +68,13 @@ module CodeSlide
       return checkout_current_step
     end
       
-    def last           
-      @current_step = -1
-      checkout_current_step      
-    end 
-    
-    def first        
-      @current_step = 0
-      checkout_current_step      
-    end   
-      
     def set_current_step
-      @current_step = sorted_branch_list.index(@git.current_branch)
+      @current_step = sorted_branch_list.index(@slide_runner.current_branch)
     end
     
     def checkout_current_step
       branch = sorted_branch_list[@current_step] 
       return checkout(branch)
-    end
-       
-    def list_steps
-      list_string = ""                                       
-      sorted_branch_list.each_with_index do | step, ind |    
-        list_string << "#{ind}) #{step_string(step)}\n"
-      end                        
-      list_string
     end
   
     def step_string(step)
@@ -139,18 +94,19 @@ module CodeSlide
       @change_file_hash = { :new => [ ], :deleted => [ ], :modified => [ ] }
       previous_step = previous_branch
       this_step = current_branch
-      @git.diff(previous_step, this_step).each do | file |
+      slide_runner.diff(previous_step, this_step).each do | file |
         add_changes_from_diff( file )
       end             
     end
   
     def branch_changes?
-      return true if @git.diff(current_branch, '.').size > 0
+      return true if @slide_runner.diff(current_branch, '.').size > 0
       return false
     end
   
     def stash
-      Git::Stash.new(@git,"WIP").save  
+      @slide_runner.stash
+      puts "Stashing changes."
     end
     
     def add_changes_from_diff( file )
@@ -165,16 +121,6 @@ module CodeSlide
       end                          
     end           
     
-    def changes
-      @changes_string = ""
-      change_list = changed_files
-      return "no changes" if change_list == false
-      [ :new, :deleted, :modified ].each do | type |
-        process_change_type( type )
-      end
-      @changes_string
-    end          
-   
     def process_change_type( type )
       type_array = @change_file_hash[type]
       @changes_string << "\n" + type.to_s.capitalize + " files\n"
@@ -183,54 +129,12 @@ module CodeSlide
       type_array.each{ |file| @changes_string << file[0] + "\n" } 
     end    
    
-    def file_mods                             
-      return "no_mods" if modifications?
-      return_string = @changed_file_hash[:modified].inject(""){ |changes_string, modified_file|  changes_string << modified_file[0] + "\n" + modified_file[1] }
-    end
-  
+
     def modifications?
       return false if @changed_file_hash[:modified].nil?
       true
     end
                     
-    def help_text
-      @help_string = <<e_string
-Code Slide Help
-------------------
-Run with the following:
-e_string
-      CALL_HASH.keys.each do | com |
-        hsh = CALL_HASH[com]
-        @help_string << "%-20s %s" % [ com.to_s + " :", hsh[:help] ] + "\n"
-      end
-      @help_string << "Providing just a number will change to that particular step\n\n"
-    end
-    
-    def client_run(command)
-      
-      case command           
-      when /^(help|h)$/
-        puts help_text
-      when /\d+/ 
-        response = send(:step, command)
-        puts response if !response.nil?
-      else
-        command_sym = command.to_sym
-        response_from_command( command_sym )
-      end      
-    end
-    
-    def response_from_command( command )
-      puts "sorry I do not understand #{command}" if !CALL_HASH.has_key?(command)
-      respond_hash = CALL_HASH[command]
-      response = send(command)
-      if response_string = respond_hash[:respond_with]
-        puts response_string
-      else
-        puts response if !response.nil?
-      end
-    end
-    
   end
   #just a missing repository error - nothing to see here - move on
   class MissingRepositoryError < ArgumentError
