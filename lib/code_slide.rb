@@ -1,14 +1,17 @@
 require 'rubygems'
 require 'git'
 require 'code_slide/runner_constants'
+require 'code_slide/scm'
+require 'code_slide/ui_api'   
 
 # CodeSlide is a class used to run and interface with the SCM (currently using git)
 # It's primary use is to facilitate relatively seamless presentations
 # of code to training courses or talks
 #                                                                                 
+#  Created by Andy Mendelsohn on 2010-11-28.
+#  Copyright (c) 2010 nHabit ltd. All rights reserved.
+#   
 
-require 'code_slide/scm'
-require 'code_slide/ui_api'
 
 module CodeSlide
   # call_hash defined in the constants.
@@ -17,7 +20,7 @@ module CodeSlide
     include CodeSlide::RunnerConstants
     include CodeSlide::UIAPI
 
-    attr_accessor :git, :current_step, :scm, :slide_runner
+    attr_accessor :current_step, :scm, :slide_runner
        
     def initialize( args )
       
