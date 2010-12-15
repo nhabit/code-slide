@@ -73,7 +73,7 @@ module CodeSlide
    
     def file_mods                             
       return "no_mods" if modifications?
-      return_string = @changed_file_hash[:modified].inject(""){ |changes_string, modified_file|  changes_string << modified_file[0] + "\n" + modified_file[1] }
+      return_string = @changed_file_hash[ :modified ].inject(""){ | changes_string, modified_file |  changes_string << modified_file[ 0 ] + "\n" + modified_file[ 1 ] }
     end
   
     def help_text
@@ -83,19 +83,19 @@ Code Slide Help
 Run with the following:
 e_string
       RunnerConstants::CALL_HASH.keys.each do | com |
-        hsh = RunnerConstants::CALL_HASH[com]
+        hsh = RunnerConstants::CALL_HASH[ com ]
         @help_string << "%-20s %s" % [ com.to_s + " :", hsh[:help] ] + "\n"
       end
       @help_string << "Providing just a number will change to that particular step\n\n"
     end
     
-    def client_run(command)
+    def client_run( command )
       
       case command           
       when /^(help|h)$/
         puts help_text
       when /\d+/ 
-        response = send(:step, command)
+        response = send( :step, command )
         puts response if !response.nil?
       else
         command_sym = command.to_sym
@@ -104,10 +104,10 @@ e_string
     end   
 
     def response_from_command( command )
-      puts "sorry I do not understand #{command}" if !RunnerConstants::CALL_HASH.has_key?(command)
-      respond_hash = RunnerConstants::CALL_HASH[command]
-      response = send(command)
-      if response_string = respond_hash[:respond_with]
+      puts "sorry I do not understand #{command}" if !RunnerConstants::CALL_HASH.has_key?( command )
+      respond_hash = RunnerConstants::CALL_HASH[ command ]
+      response = send( command )
+      if response_string = respond_hash[ :respond_with ]
         puts response_string
       else
         puts response if !response.nil?

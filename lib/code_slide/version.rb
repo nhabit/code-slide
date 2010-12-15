@@ -5,6 +5,6 @@ module CodeSlide
     MINOR = 0
     PATCH = 0
 
-    STRING = [MAJOR, MINOR, PATCH].compact.join('.')
+    STRING = [ MAJOR, MINOR, PATCH ].compact.join( '.' )
   end
 end

@@ -7,29 +7,29 @@ module CodeSlide
 # etc...
   class CSGit
     
-    def initialize(repository)
-      @repository = repository
+    def initialize( args_hash )
+      @repository = args_hash[ :repository ]
       @git = Git.open( @repository )
     end 
 
     def step_names
-      @git.branches.map{| branch | branch.name }
+      @git.branches.map{ | branch | branch.name }
     end
     
     def current_branch
       @git.current_branch
     end 
     
-    def checkout(branch)
-      @git.checkout(branch)
+    def checkout( branch )
+      @git.checkout( branch )
     end
     
     def stash
-      Git::Stash.new(@git,"WIP").save      
+      Git::Stash.new( @git,"WIP" ).save      
     end
 
-    def diff(previous_step, this_step)
-      @git.diff(previous_step, this_step)
+    def diff( previous_step, this_step )
+      @git.diff( previous_step, this_step )
     end
     
   end
