@@ -51,7 +51,7 @@ rake install
 
 And then repeat. repeat. repeat
 
-==== Workflow for presenting code to a hungry audience
+=== Workflow for presenting code to a hungry audience
 
 If you have installed code-slide without any problem, you should be able to call the code-slide command at any time, as it will be in your path.
 
