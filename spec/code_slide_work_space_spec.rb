@@ -7,7 +7,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-describe CodeSlide do
+describe CodeSlide::WorkSpace do
 
   before(:all) do
     create_repositories
