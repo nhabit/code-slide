@@ -14,7 +14,7 @@ module CodeSlide
       :file_mods => {:help => "Lists the files and their modifications between this step and the previous one"}
     }
     
-    # returns a closure
+    # this is how we create our SCM classes.
     SCM_HASH = {
       :git => proc{ | arg_hash | CodeSlide::CSGit.new( arg_hash ) }
     }                          

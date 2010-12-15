@@ -26,7 +26,7 @@ module CodeSlide
       # for now:
       get_runner
     end
-    
+
     def get_runner   
       @slide_runner = SCM_HASH[@scm.to_sym].call(@repository)
     end
