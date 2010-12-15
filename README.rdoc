@@ -10,7 +10,7 @@ plugin/replacement scm has to be able to provide something similiar to git's bra
 
 It's still very beta, so please go easy on us!
                                
-= Future features:
+== Future features:
 - An attempt to move away from powerpoint and back towards the browser as a means of 'presenting' slides. with the use of html to document code changes, act as slides for a specific branch. perhaps use some very lightweight framework (ramaze? sinatra?) to produce slides/views    
 
 - Add a means of restoring stashs when you return to a particular branch.
@@ -24,7 +24,9 @@ Andy Mendelsohn - December 2010
                                                                                                              
                                                                                                              
 == Installation:
+
 git clone git@github.com:nhabit/Code-slide.git
+
 rake install 
 
 == How to:
@@ -43,7 +45,7 @@ rake install
 9. git add and git commit the code
 
 ==== Repeat :
-10. git checkout -b "2_this would be my second slide"
+10. git checkout -b "2_this_would_be_my_second_slide"
 11. Add some code. The second lot of code you want to show
 12. git add and git commit the code
 
