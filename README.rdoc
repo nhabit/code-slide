@@ -11,7 +11,7 @@ plugin/replacement scm has to be able to provide something similiar to git's bra
 It's still very beta, so please go easy on us!
                                
 == Future features:
-- An attempt to move away from powerpoint and back towards the browser as a means of 'presenting' slides. with the use of html to document code changes, act as slides for a specific branch. perhaps use some very lightweight framework (ramaze? sinatra?) to produce slides/views    
+- How about An attempt to move away from powerpoint and towards the browser as a means of 'presenting' slides. with the use of html to document code changes, act as slides for a specific branch. perhaps use some very lightweight framework (ramaze? sinatra?) to produce slides/views    
 
 - Add a means of restoring stashs when you return to a particular branch.
 
@@ -81,17 +81,13 @@ Providing just a number will change to that particular step
 
 =
 -
-
-
- 
- 
- 
+                        
  It requires that your git branches are names consecutively: 1_tag, 2_tag, 3_tag, etc. 
  Anything that doesn't start with a number (like master) won't be included as a slide.
  
  check the tests for how to use.
 
-== Contributing to git-train
+== Contributing to code-slide
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
